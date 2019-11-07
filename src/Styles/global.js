@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-
+import { darken } from 'polished';
 // import 'react-perfect-scrollbar/dist/css/styles.css';
 // import 'react-toastify/dist/ReactToastify.css';
 
@@ -40,5 +40,16 @@ export default createGlobalStyle`
 
   button {
     cursor: pointer;
+    height: 45px;
+    background: #ee4d64;
+    border-radius: 4px;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+
+    &:hover{
+      background: ${darken(0.03, '#ee4d64')};
+    }
   }
 `;

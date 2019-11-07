@@ -1,5 +1,11 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+
+// O objeto Route aqui não é diretamente do
+// react-router-dom pois estamos tratando
+// o parâmetro isPrivate (Rotas que o usuário deve estar
+// logado para acessar)
+import Route from './Route';
 
 import SignIn from '../pages/SignIn';
 import ManageEnrollments from '../pages/Enrollments/ManageEnrollments';
@@ -17,16 +23,26 @@ export default function Routes() {
       <Route
         path="/enrollments/manageenrollments"
         component={ManageEnrollments}
+        isPrivate
       />
       <Route
         path="/enrollments/Registerenrollments"
         component={RegisterEnrollments}
+        isPrivate
       />
-      <Route path="/helporders" component={HelpOrders} />
-      <Route path="/plans/manageplans" component={ManagePlans} />
-      <Route path="/plans/registerplans" component={RegisterPlans} />
-      <Route path="/students/managestudents" component={ManageStudents} />
-      <Route path="/students/registerstudents" component={RegisterStudents} />
+      <Route path="/helporders" component={HelpOrders} isPrivate />
+      <Route path="/plans/manageplans" component={ManagePlans} isPrivate />
+      <Route path="/plans/registerplans" component={RegisterPlans} isPrivate />
+      <Route
+        path="/students/managestudents"
+        component={ManageStudents}
+        isPrivate
+      />
+      <Route
+        path="/students/registerstudents"
+        component={RegisterStudents}
+        isPrivate
+      />
     </Switch>
   );
 }

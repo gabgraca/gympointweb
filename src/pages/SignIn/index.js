@@ -1,7 +1,19 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import logo from '../../assets/logo.svg';
 
 export default function SignIn() {
-  return <h1>SignIn</h1>;
+  return (
+    <>
+      <img src={logo} alt="GymPoint" />
+      <span>GYMPOINT</span>
+      <form>
+        <p>SEU E-MAIL</p>
+        <input type="email" name="mail" />
+        <p>SUA SENHA</p>
+        <input type="password" />
+        <button type="submit">Entrar no sistema</button>
+      </form>
+    </>
+  );
 }
