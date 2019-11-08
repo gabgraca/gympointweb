@@ -1,19 +1,27 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { Form, Input } from '@rocketseat/unform';
+
+import { signInRequest } from '../../store/modules/auth/actions';
 
 import logo from '../../assets/logo.svg';
 
 export default function SignIn() {
+  const dispatch = useDispatch();
+  function handleSubmit({ email, password }) {
+    dispatch(signInRequest(email, password));
+  }
   return (
     <>
       <img src={logo} alt="GymPoint" />
       <span>GYMPOINT</span>
-      <form>
+      <Form onSubmit={handleSubmit}>
         <p>SEU E-MAIL</p>
-        <input type="email" name="mail" />
+        <Input type="email" name="email" />
         <p>SUA SENHA</p>
-        <input type="password" />
+        <Input type="password" name="password" />
         <button type="submit">Entrar no sistema</button>
-      </form>
+      </Form>
     </>
   );
 }

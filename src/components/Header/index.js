@@ -1,10 +1,12 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { Container, Content } from './styles';
 
 import logo from '../../assets/logo.svg';
 
 export default function Header() {
+  const name = useSelector(state => state.auth.name);
   return (
     <Container>
       <Content>
@@ -32,7 +34,7 @@ export default function Header() {
           </NavLink>
         </nav>
         <aside>
-          <strong>Gabriel Graça</strong>
+          <strong>{name}</strong>
           <Link to="/students/managestudents">Sair do sistema</Link>
         </aside>
       </Content>

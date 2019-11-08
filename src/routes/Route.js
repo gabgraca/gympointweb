@@ -5,6 +5,8 @@ import { Route, Redirect } from 'react-router-dom';
 import AuthLayout from '../pages/_layouts/auth';
 import DefaultLayout from '../pages/_layouts/default';
 
+import { store } from '../store';
+
 // Cria objeto Route do React, porém todas as rotas
 // passarão por esta função antes, o objetivo é
 // validar se são todas privadas(onde o usuário precisa estar logado)
@@ -14,7 +16,7 @@ export default function RouteWrapper({
   isPrivate,
   ...rest
 }) {
-  const signed = true; // Flag de usuário logado
+  const { signed } = store.getState().auth; // Flag de usuário logado
 
   // Se o usuário não está logado e a rota é privada
   if (!signed && isPrivate) {
