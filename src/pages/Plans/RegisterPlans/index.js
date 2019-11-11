@@ -10,6 +10,8 @@ export default function RegisterPlans() {
   function handleBackButton() {
     history.push('/plans/manageplans');
   }
+
+  // function calculateTotalPrice() {}
   return (
     <Container>
       <Top>
