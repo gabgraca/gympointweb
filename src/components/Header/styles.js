@@ -50,9 +50,15 @@ export const Content = styled.div`
       font-weight: bold;
       margin-bottom: 4px;
     }
-    a {
+    button {
+      background: inherit;
       color: #de3b3b;
       font-size: 14px;
+      height: auto;
+      font-weight: normal;
+      border: none;
+      padding: 0;
+      margin: 0;
     }
   }
 `;

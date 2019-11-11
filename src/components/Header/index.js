@@ -1,12 +1,17 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { Container, Content } from './styles';
+import { signOut } from '../../store/modules/auth/actions';
 
 import logo from '../../assets/logo.svg';
 
 export default function Header() {
   const name = useSelector(state => state.auth.name);
+  const dispatch = useDispatch();
+  function handleSignOut() {
+    dispatch(signOut());
+  }
   return (
     <Container>
       <Content>
@@ -35,7 +40,9 @@ export default function Header() {
         </nav>
         <aside>
           <strong>{name}</strong>
-          <Link to="/students/managestudents">Sair do sistema</Link>
+          <button type="button" onClick={handleSignOut}>
+            Sair do sistema
+          </button>
         </aside>
       </Content>
     </Container>

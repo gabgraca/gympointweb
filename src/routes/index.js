@@ -31,8 +31,10 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/helporders" component={HelpOrders} isPrivate />
+
       <Route path="/plans/manageplans" component={ManagePlans} isPrivate />
-      <Route path="/plans/registerplans" component={RegisterPlans} isPrivate />
+      <Route path="/plans/newplan" component={RegisterPlans} isPrivate />
+      <Route path="/plans/:id/edit" component={RegisterPlans} isPrivate />
       <Route
         path="/students/managestudents"
         component={ManageStudents}

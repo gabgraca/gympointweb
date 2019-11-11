@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { Form } from '@rocketseat/unform';
 
 export const Container = styled.div`
@@ -17,14 +18,15 @@ export const Top = styled.div`
     font-weight: bold;
   }
 `;
+
 export const Fields = styled(Form)`
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
   width: 900px;
-  min-height: 307px;
-  padding: 10px 30px;
+
+  padding: 10px 30px 30px;
   border-radius: 4px;
 
   strong {
@@ -42,11 +44,6 @@ export const Fields = styled(Form)`
     padding: 15px 13px;
     color: #999999;
   }
-
-  span {
-    margin-bottom: 5px;
-    color: red;
-  }
 `;
 
 export const BottomFields = styled.div`
@@ -60,9 +57,8 @@ export const BottomFields = styled.div`
     input {
       width: 270px;
     }
-  }
-  span {
-    margin-bottom: 5px;
-    color: red;
+    .locked {
+      background: #f5f5f5;
+    }
   }
 `;

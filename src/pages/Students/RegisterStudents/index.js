@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
+import * as Yup from 'yup';
 import { Input } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
-import { Container, Top, Fields, BackButton, BottomFields } from './styles';
+import { Container, Top, Fields, BottomFields } from './styles';
 import history from '../../../services/history';
 import api from '../../../services/api';
+import SaveAndBackButtons from '../../../components/Controls/SaveAndBackButtons';
+
+const schema = Yup.object().shape({
+  nome: Yup.string()
+    .required('O nome é obrigatório')
+    .matches(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/, 'Formato incorreto'),
+  email: Yup.string()
+    .email('Formato de e-mail incorreto')
+    .required('Campo Obrigatório'),
+  idade: Yup.number('Somente números').required('Campo Obrigatório'),
+  peso: Yup.number('Somente números').required('Campo Obrigatório'),
+  altura: Yup.number('Somente números').required('Campo Obrigatório'),
+});
 
 export default function RegisterStudents() {
   // Carrega o id da URL (se existir)
@@ -63,22 +75,14 @@ export default function RegisterStudents() {
     <Container>
       <Top>
         <strong>Cadastro de Aluno</strong>
-        <div>
-          <div>
-            <MdKeyboardArrowLeft />
-            <BackButton type="button" onClick={handleBackButton}>
-              VOLTAR
-            </BackButton>
-          </div>
-          <div>
-            <MdCheck />
-            <button type="submit" form="dados">
-              SALVAR
-            </button>
-          </div>
-        </div>
+        <SaveAndBackButtons backClick={handleBackButton} formName="dados" />
       </Top>
-      <Fields id="dados" onSubmit={handleSubmit} initialData={student}>
+      <Fields
+        schema={schema}
+        id="dados"
+        onSubmit={handleSubmit}
+        initialData={student}
+      >
         <strong>NOME COMPLETO</strong>
         <Input type="text" name="nome" />
         <strong>ENDEREÇO DE E-MAIL</strong>
