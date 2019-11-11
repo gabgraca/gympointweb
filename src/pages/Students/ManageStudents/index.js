@@ -77,7 +77,9 @@ export default function ManageStudents() {
                 <Link to={`/students/${student.id}/edit`}>Editar</Link>
               </td>
               <td>
-                <Link to="/">Apagar</Link>
+                <button type="button" onClick={() => console.log('apagar')}>
+                  Apagar
+                </button>
               </td>
             </tr>
           ))}

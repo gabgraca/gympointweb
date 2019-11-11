@@ -98,5 +98,12 @@ export const List = styled.table`
     a {
       color: #666666;
     }
+
+    button {
+      background: inherit;
+      color: #666666;
+      font-size: 14px;
+      font-weight: normal;
+    }
   }
 `;
