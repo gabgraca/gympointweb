@@ -1,28 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { MdKeyboardArrowLeft, MdCheck } from 'react-icons/md';
 import { Input } from '@rocketseat/unform';
+import { toast } from 'react-toastify';
 import { Container, Top, Fields, BackButton, BottomFields } from './styles';
 import history from '../../../services/history';
 import api from '../../../services/api';
 
 export default function RegisterStudents() {
+  // Carrega o id da URL (se existir)
+  const { id } = useParams();
+  const [student, setStudent] = useState({});
+
+  async function readStudent(studentId) {
+    const response = await api.get(`/students/${studentId}`);
+    setStudent(response.data);
+  }
+
+  useEffect(() => {
+    // Verifica se existe ID lido dos parâmetros da URL
+    if (id) {
+      // Carrega os dados do estudante
+      readStudent(id);
+    }
+  }, [id]);
+
   function handleBackButton() {
     history.push('/students/managestudents');
   }
   async function handleSubmit({ nome, email, idade, peso, altura }) {
     try {
-      await api.post('/students', {
-        nome,
-        email,
-        idade,
-        peso,
-        altura,
-      });
-
+      if (!id) {
+        await api.post('/students', {
+          nome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+      } else {
+        await api.put('/students', {
+          id,
+          nome,
+          email,
+          idade,
+          peso,
+          altura,
+        });
+      }
+      toast.success('Cadastro realizado com sucesso');
       history.push('/students/managestudents');
     } catch (err) {
-      console.tron.log('erro');
+      if (err.response.data.error) {
+        toast.error(`Erro no cadastro: ${err.response.data.error}`);
+      } else {
+        toast.error('Erro no cadastro');
+      }
     }
   }
   return (
@@ -44,7 +78,7 @@ export default function RegisterStudents() {
           </div>
         </div>
       </Top>
-      <Fields id="dados" onSubmit={handleSubmit}>
+      <Fields id="dados" onSubmit={handleSubmit} initialData={student}>
         <strong>NOME COMPLETO</strong>
         <Input type="text" name="nome" />
         <strong>ENDEREÇO DE E-MAIL</strong>

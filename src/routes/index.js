@@ -39,10 +39,11 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/students/registerstudents"
+        path="/students/newstudent"
         component={RegisterStudents}
         isPrivate
       />
+      <Route path="/students/:id/edit" component={RegisterStudents} isPrivate />
     </Switch>
   );
 }

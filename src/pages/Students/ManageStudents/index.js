@@ -7,19 +7,37 @@ import api from '../../../services/api';
 
 export default function ManageStudents() {
   const [students, setStudents] = useState([]);
+  const [readStudents, setReadStudents] = useState([]);
 
   function handleButtonClick() {
-    history.push('/students/registerstudents');
+    history.push('/students/newstudent');
   }
   useEffect(() => {
     async function loadStudents() {
       const response = await api.get('students');
 
       setStudents(response.data);
+      setReadStudents(response.data);
     }
 
     loadStudents();
   }, []);
+
+  function handleSearch(e) {
+    const { value } = e.target;
+
+    if (value) {
+      const filteredStudents = readStudents.filter(
+        student =>
+          String(student.nome).includes(value) ||
+          String(student.email).includes(value) ||
+          String(student.idade).includes(value)
+      );
+      setStudents(filteredStudents);
+    } else {
+      setStudents(readStudents);
+    }
+  }
 
   return (
     <Container>
@@ -32,7 +50,11 @@ export default function ManageStudents() {
           </button>
           <Search>
             <MdSearch />
-            <input type="text" placeholder="Buscar aluno" />
+            <input
+              type="text"
+              placeholder="Buscar aluno"
+              onChange={handleSearch}
+            />
           </Search>
         </div>
       </Top>
@@ -52,7 +74,7 @@ export default function ManageStudents() {
               <td>{student.email}</td>
               <td>{student.idade}</td>
               <td>
-                <Link to="/students/registerstudents">Editar</Link>
+                <Link to={`/students/${student.id}/edit`}>Editar</Link>
               </td>
               <td>
                 <Link to="/">Apagar</Link>

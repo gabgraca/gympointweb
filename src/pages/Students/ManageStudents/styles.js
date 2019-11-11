@@ -95,5 +95,8 @@ export const List = styled.table`
     &:nth-child(3) {
       text-align: center;
     }
+    a {
+      color: #666666;
+    }
   }
 `;
