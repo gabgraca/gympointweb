@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 import { Input } from '@rocketseat/unform';
-// import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Container, Top, Fields, BottomFields } from './styles';
 import SaveAndBackButtons from '../../../components/Controls/SaveAndBackButtons';
 import history from '../../../services/history';
 import { formatPrice } from '../../../util/format';
+import api from '../../../services/api';
 
 export default function RegisterPlans() {
+  const { id } = useParams();
+  const [plan, setPlan] = useState({});
+
   function handleBackButton() {
     history.push('/plans/manageplans');
   }
-
-  const [plan, setPlan] = useState({});
-  // const [totalPrice, setTotalPrice] = useState(0);
 
   const totalPrice = useMemo(() => {
     if (plan.duration && plan.price) {
@@ -22,14 +24,49 @@ export default function RegisterPlans() {
     return formatPrice(0);
   }, [plan.duration, plan.price]);
 
-  useEffect(() => {
-    setPlan({
-      title: 'teste do gab',
-      duration: 12,
-      price: 0,
-    });
-  }, []);
+  async function readPlan(planId) {
+    const response = await api.get(`/plans/${planId}`);
+    setPlan(response.data);
+  }
 
+  useEffect(() => {
+    if (id) {
+      readPlan(id);
+    } else {
+      setPlan({
+        title: '',
+        duration: 0.0,
+        price: 0.0,
+      });
+    }
+  }, [id]); //eslint-disable-line
+
+  async function handleSubmit({ title, price, duration }) {
+    try {
+      if (!id) {
+        await api.post('/plans', {
+          title,
+          price,
+          duration,
+        });
+      } else {
+        await api.put('/plans', {
+          id,
+          title,
+          price,
+          duration,
+        });
+      }
+      toast.success('Cadastro realizado com sucesso');
+      history.push('/plans/manageplans');
+    } catch (err) {
+      if (err.response.data.error) {
+        toast.error(`Erro no cadastro: ${err.response.data.error}`);
+      } else {
+        toast.error('Erro no cadastro');
+      }
+    }
+  }
   // function calculateTotalPrice() {}
   return (
     <Container>
@@ -40,7 +77,7 @@ export default function RegisterPlans() {
           backClick={() => handleBackButton()}
         />
       </Top>
-      <Fields initialData={plan}>
+      <Fields initialData={plan} id="dados" onSubmit={handleSubmit}>
         <strong>TÍTULO DO PLANO</strong>
         <Input
           type="text"

@@ -20,6 +20,9 @@ export default function ManageStudents() {
   async function loadStudents() {
     const response = await api.get('students');
 
+    response.data.sort(function e(a, b) {
+      return a.nome.localeCompare(b.nome);
+    });
     setStudents(response.data);
     setReadStudents(response.data);
   }
