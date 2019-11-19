@@ -1,31 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from '@rocketseat/unform';
-import AsyncSelect from 'react-select/async';
 import history from '../../../services/history';
 import api from '../../../services/api';
 import SaveAndBackButtons from '../../../components/Controls/SaveAndBackButtons';
+import ReactAsync from '../../../components/ReactAsync';
 import { Container, Top, Fields, BottomFields } from './styles';
 
 export default function RegisterEnrollments() {
   const [students, setStudents] = useState([]);
-
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      color: state.isSelected ? '#999999' : '#999999',
-    }),
-    control: () => ({
-      border: '1px solid #dddddd',
-      borderRadius: '4px',
-      display: 'flex',
-      height: '45px',
-      marginTop: '8px',
-    }),
-    singleValue: provided => ({
-      ...provided,
-      color: '#999999',
-    }),
-  };
 
   function filterStudents(inputValue) {
     // Substituir pela leitura dos estudantes através da API com Filtro!!!!
@@ -72,7 +54,9 @@ export default function RegisterEnrollments() {
     const inputValue = newValue.replace(/\W/g, '');
     return inputValue;
   }
-
+  function handleSubmit(data) {
+    console.tron.log(data);
+  }
   return (
     <>
       <Container>
@@ -85,14 +69,13 @@ export default function RegisterEnrollments() {
             />
           </div>
         </Top>
-        <Fields>
+        <Fields id="dados" onSubmit={handleSubmit}>
           <strong>ALUNO</strong>
           <div>
-            <AsyncSelect
-              cacheOptions
+            <ReactAsync
+              name="alunoselect"
               defaultOptions={students}
               loadOptions={loadOptions}
-              styles={customStyles}
               placeholder="Selecione o aluno..."
               onInputChange={handleInputChange}
             />
