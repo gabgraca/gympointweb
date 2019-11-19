@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import { MdCheckCircle } from 'react-icons/md';
 import RegisterButton from '../../../components/Controls/RegisterButton';
 import { Container, Top, List } from './styles';
+import history from '../../../services/history';
 
 export default function ManageEnrollments() {
-  function handleButtonClick() {}
+  function handleButtonClick() {
+    history.push('/enrollments/newenrollment');
+  }
   return (
     <>
       <Container>
@@ -17,11 +20,13 @@ export default function ManageEnrollments() {
         </Top>
         <List>
           <thead>
-            <th>ALUNO</th>
-            <th>PLANO</th>
-            <th>INÍCIO</th>
-            <th>TÉRMINO</th>
-            <th>ATIVA</th>
+            <tr>
+              <th>ALUNO</th>
+              <th>PLANO</th>
+              <th>INÍCIO</th>
+              <th>TÉRMINO</th>
+              <th>ATIVA</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
@@ -36,7 +41,10 @@ export default function ManageEnrollments() {
                 <Link to="/">Editar</Link>
               </td>
               <td>
-                <button type="button" onClick={console.log('Apagar')}>
+                <button
+                  type="button"
+                  onClick={() => console.tron.log('Apagar')}
+                >
                   Apagar
                 </button>
               </td>
@@ -53,7 +61,10 @@ export default function ManageEnrollments() {
                 <Link to="/">Editar</Link>
               </td>
               <td>
-                <button type="button" onClick={console.log('Apagar')}>
+                <button
+                  type="button"
+                  onClick={() => console.tron.log('Apagar')}
+                >
                   Apagar
                 </button>
               </td>
@@ -70,7 +81,10 @@ export default function ManageEnrollments() {
                 <Link to="/">Editar</Link>
               </td>
               <td>
-                <button type="button" onClick={console.log('Apagar')}>
+                <button
+                  type="button"
+                  onClick={() => console.tron.log('Apagar')}
+                >
                   Apagar
                 </button>
               </td>
@@ -87,7 +101,10 @@ export default function ManageEnrollments() {
                 <Link to="/">Editar</Link>
               </td>
               <td>
-                <button type="button" onClick={console.log('Apagar')}>
+                <button
+                  type="button"
+                  onClick={() => console.tron.log('Apagar')}
+                >
                   Apagar
                 </button>
               </td>
@@ -104,7 +121,10 @@ export default function ManageEnrollments() {
                 <Link to="/">Editar</Link>
               </td>
               <td>
-                <button type="button" onClick={console.log('Apagar')}>
+                <button
+                  type="button"
+                  onClick={() => console.tron.log('Apagar')}
+                >
                   Apagar
                 </button>
               </td>

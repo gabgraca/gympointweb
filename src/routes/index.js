@@ -26,7 +26,7 @@ export default function Routes() {
         isPrivate
       />
       <Route
-        path="/enrollments/Registerenrollments"
+        path="/enrollments/newenrollment"
         component={RegisterEnrollments}
         isPrivate
       />
