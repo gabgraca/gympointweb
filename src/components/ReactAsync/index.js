@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { useField } from '@rocketseat/unform';
 
@@ -8,8 +8,10 @@ export default function ReactAsync({
   defaultOptions,
   loadOptions,
   handleInputChange,
+  valorDefault,
   ...rest
 }) {
+  const [defaultValue, setDefaultValue] = useState({});
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -19,6 +21,7 @@ export default function ReactAsync({
       border: '1px solid #dddddd',
       borderRadius: '4px',
       display: 'flex',
+      width: '100%',
       height: '45px',
       marginTop: '8px',
     }),
@@ -30,6 +33,13 @@ export default function ReactAsync({
 
   const ref = useRef(null);
   const { fieldName, registerField } = useField(name);
+
+  useEffect(() => {
+    ref.current.select.state.value = defaultOptions.find(option => {
+      return String(option.value) === String(valorDefault);
+    });
+    setDefaultValue(ref.current.select.state.value);
+  }, [defaultOptions, valorDefault]);
 
   useEffect(() => {
     registerField({
@@ -50,6 +60,10 @@ export default function ReactAsync({
       onInputChange={handleInputChange}
       getOptionValue={option => option.value}
       getOptionLabel={option => option.label}
+      value={defaultValue}
+      onChange={e => {
+        setDefaultValue(e);
+      }}
       {...rest}
     />
   );

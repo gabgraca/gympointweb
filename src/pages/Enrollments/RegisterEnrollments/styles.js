@@ -46,16 +46,21 @@ export const Fields = styled(Form)`
     padding: 15px 13px;
     color: #999999;
   }
+  .UnformInput {
+    background: #fff;
+    width: 198px;
+  }
 `;
 
 export const BottomFields = styled.div`
   display: flex;
   justify-content: space-between;
 
-  div {
+  .divs {
     display: flex;
     flex-direction: column;
-
+    width: 198px;
+    height: 100%;
     input {
       width: 198px;
     }

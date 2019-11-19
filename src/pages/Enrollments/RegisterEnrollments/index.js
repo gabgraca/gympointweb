@@ -8,6 +8,8 @@ import { Container, Top, Fields, BottomFields } from './styles';
 
 export default function RegisterEnrollments() {
   const [students, setStudents] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [selectPlans, setSelectPlans] = useState([]);
 
   function filterStudents(inputValue) {
     // Substituir pela leitura dos estudantes através da API com Filtro!!!!
@@ -46,8 +48,21 @@ export default function RegisterEnrollments() {
     setStudents(preStudents);
   }
 
+  async function loadPlans() {
+    const prePlans = [];
+    const response = await api.get('plans');
+    response.data.forEach(plan => {
+      prePlans.push({
+        value: plan.id,
+        label: plan.title,
+      });
+    });
+    setSelectPlans(prePlans);
+    setPlans(response.data);
+  }
   useEffect(() => {
     loadStudents();
+    loadPlans();
   }, []);// eslint-disable-line
 
   function handleInputChange(newValue) {
@@ -71,39 +86,42 @@ export default function RegisterEnrollments() {
         </Top>
         <Fields id="dados" onSubmit={handleSubmit}>
           <strong>ALUNO</strong>
-          <div>
-            <ReactAsync
-              name="alunoselect"
-              defaultOptions={students}
-              loadOptions={loadOptions}
-              placeholder="Selecione o aluno..."
-              onInputChange={handleInputChange}
-            />
-          </div>
+
+          <ReactAsync
+            name="alunoselect"
+            defaultOptions={students}
+            loadOptions={loadOptions}
+            placeholder="Selecione o aluno..."
+            onInputChange={handleInputChange}
+          />
+
           <BottomFields>
-            <div>
+            <div className="divs">
               <strong>PLANO</strong>
-              <Input
-                className="UnformInput"
-                type="text"
-                name="plano"
-                placeholder="Selecione o plano"
-              />
+              <div>
+                <ReactAsync
+                  name="plano"
+                  defaultOptions={selectPlans}
+                  placeholder="Planos..."
+                />
+              </div>
             </div>
-            <div>
+            <div className="divs">
               <strong>DATA DE INÍCIO</strong>
-              <Input
-                className="UnformInput"
-                type="text"
-                name="dtini"
-                placeholder="Escolha a data"
-              />
+              <div>
+                <Input
+                  className="UnformInput"
+                  type="text"
+                  name="dtini"
+                  placeholder="Escolha a data"
+                />
+              </div>
             </div>
-            <div>
+            <div className="divs">
               <strong>DATA DE TÉRMINO</strong>
               <input type="text" className="locked" disabled value={0} />
             </div>
-            <div>
+            <div className="divs">
               <strong>VALOR FINAL</strong>
               <input type="text" className="locked" disabled value={0} />
             </div>
