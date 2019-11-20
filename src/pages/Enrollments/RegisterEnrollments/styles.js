@@ -37,6 +37,7 @@ export const Fields = styled(Form)`
   input {
     color: #999999;
   }
+
   .UnformInput,
   .locked {
     height: 45px;
@@ -45,6 +46,7 @@ export const Fields = styled(Form)`
     margin-top: 8px;
     padding: 15px 13px;
     color: #999999;
+    text-align: center;
   }
   .UnformInput {
     background: #fff;
@@ -55,6 +57,18 @@ export const Fields = styled(Form)`
 export const BottomFields = styled.div`
   display: flex;
   justify-content: space-between;
+
+  .react-datepicker__input-container {
+    input {
+      height: 45px;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      margin-top: 8px;
+      padding: 15px 13px;
+      color: #999999;
+      text-align: center;
+    }
+  }
 
   .divs {
     display: flex;

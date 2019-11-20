@@ -8,10 +8,10 @@ export default function ReactAsync({
   defaultOptions,
   loadOptions,
   handleInputChange,
-  valorDefault,
+  placeHolder,
   ...rest
 }) {
-  const [defaultValue, setDefaultValue] = useState({});
+  const [value, setValue] = useState(null);
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -32,14 +32,20 @@ export default function ReactAsync({
   };
 
   const ref = useRef(null);
-  const { fieldName, registerField } = useField(name);
+  const { fieldName, registerField, defaultValue } = useField(name);
 
   useEffect(() => {
-    ref.current.select.state.value = defaultOptions.find(option => {
-      return String(option.value) === String(valorDefault);
-    });
-    setDefaultValue(ref.current.select.state.value);
-  }, [defaultOptions, valorDefault]);
+    if (defaultValue) {
+      ref.current.select.state.value = defaultOptions.find(option => {
+        return String(option.value) === String(defaultValue.value);
+      });
+      if (ref.current.select.state.value) {
+        setValue(ref.current.select.state.value);
+      } else {
+        setValue(null);
+      }
+    }
+  }, [defaultOptions, defaultValue]); // eslint-line-disable
 
   useEffect(() => {
     registerField({
@@ -56,13 +62,16 @@ export default function ReactAsync({
       loadOptions={loadOptions}
       styles={customStyles}
       ref={ref}
-      placeholder="Selecione o aluno..."
-      onInputChange={handleInputChange}
+      placeholder={placeHolder}
+      // onInputChange={handleInputChange}
       getOptionValue={option => option.value}
       getOptionLabel={option => option.label}
-      value={defaultValue}
+      value={value || placeHolder}
       onChange={e => {
-        setDefaultValue(e);
+        setValue(e);
+        if (handleInputChange) {
+          handleInputChange(e);
+        }
       }}
       {...rest}
     />

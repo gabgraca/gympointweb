@@ -1,18 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from '@rocketseat/unform';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { addMonths, format, parseISO } from 'date-fns';
 import history from '../../../services/history';
 import api from '../../../services/api';
 import SaveAndBackButtons from '../../../components/Controls/SaveAndBackButtons';
 import ReactAsync from '../../../components/ReactAsync';
+import ReactDate from '../../../components/ReactDate';
 import { Container, Top, Fields, BottomFields } from './styles';
+import { formatPrice } from '../../../util/format';
 
 export default function RegisterEnrollments() {
+  const { id } = useParams();
   const [students, setStudents] = useState([]);
+  const [plan, setPlan] = useState({});
   const [plans, setPlans] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const [iniDate, setIniDate] = useState(new Date());
+  const [iniPlan, setIniPlan] = useState({});
+  const [iniStudent, setIniStudent] = useState({});
+
   const [selectPlans, setSelectPlans] = useState([]);
+
+  const iniEnrollment = useMemo(() => {
+    if (iniDate) {
+      setDate(iniDate);
+    }
+    if (iniPlan) {
+      setPlan(iniPlan);
+    }
+    return {
+      dtini: iniDate,
+      alunoselect: iniStudent,
+      plano: iniPlan,
+    };
+  }, [iniStudent, iniDate, iniPlan]);
+
+  const finValue = useMemo(() => {
+    if (plan.value) {
+      const choosenPlan = plans.find(
+        fplan => String(plan.value) === String(fplan.id)
+      );
+      if (choosenPlan) {
+        return formatPrice(choosenPlan.duration * choosenPlan.price);
+      }
+    }
+    return '';
+  }, [plan, plans]);
+
+  const dtTermino = useMemo(() => {
+    if (plan.value && date) {
+      const choosenPlan = plans.find(
+        fplan => String(plan.value) === String(fplan.id)
+      );
+      if (choosenPlan) {
+        return format(addMonths(date, choosenPlan.duration), 'dd/MM/yyyy');
+      }
+    }
+    return '';
+  }, [plan, date, plans]);
 
   function filterStudents(inputValue) {
     // Substituir pela leitura dos estudantes através da API com Filtro!!!!
+    // Não sei se realmente é necessário por conta de eu já selecionar todos
+    // e conseguir fazer o filtro direto
     if (inputValue) {
       return students.filter(student =>
         String(student.label)
@@ -33,37 +83,57 @@ export default function RegisterEnrollments() {
     history.push('/enrollments/manageenrollments');
   }
 
-  async function loadStudents() {
-    const response = await api.get('students');
+  async function loadPageObjects() {
+    const responseStudents = await api.get('students');
     const preStudents = [];
-    response.data.sort(function e(a, b) {
+    responseStudents.data.sort(function e(a, b) {
       return a.nome.localeCompare(b.nome);
     });
-    response.data.forEach(aluno => {
+    responseStudents.data.forEach(aluno => {
       preStudents.push({
         value: aluno.id,
         label: aluno.nome,
       });
     });
     setStudents(preStudents);
-  }
 
-  async function loadPlans() {
     const prePlans = [];
-    const response = await api.get('plans');
-    response.data.forEach(plan => {
+    const responsePlans = await api.get('plans');
+    responsePlans.data.forEach(fplan => {
       prePlans.push({
-        value: plan.id,
-        label: plan.title,
+        value: fplan.id,
+        label: fplan.title,
       });
     });
     setSelectPlans(prePlans);
-    setPlans(response.data);
+    setPlans(responsePlans.data);
+
+    if (id) {
+      const responseEnrollments = await api.get(`/enrollments/${id}/`);
+      if (responseEnrollments.data) {
+        setIniDate(parseISO(responseEnrollments.data.start_date));
+
+        setIniStudent(
+          preStudents.find(
+            fstudent =>
+              String(fstudent.value) ===
+              String(responseEnrollments.data.student_id)
+          )
+        );
+
+        setIniPlan(
+          prePlans.find(
+            fplan =>
+              String(fplan.value) === String(responseEnrollments.data.plan_id)
+          )
+        );
+      }
+    }
   }
+
   useEffect(() => {
-    loadStudents();
-    loadPlans();
-  }, []);// eslint-disable-line
+    loadPageObjects();
+  }, []); // eslint-disable-line
 
   function handleInputChange(newValue) {
     const inputValue = newValue.replace(/\W/g, '');
@@ -84,7 +154,7 @@ export default function RegisterEnrollments() {
             />
           </div>
         </Top>
-        <Fields id="dados" onSubmit={handleSubmit}>
+        <Fields initialData={iniEnrollment} id="dados" onSubmit={handleSubmit}>
           <strong>ALUNO</strong>
 
           <ReactAsync
@@ -103,27 +173,26 @@ export default function RegisterEnrollments() {
                   name="plano"
                   defaultOptions={selectPlans}
                   placeholder="Planos..."
+                  handleInputChange={e => setPlan(e)}
                 />
               </div>
             </div>
             <div className="divs">
               <strong>DATA DE INÍCIO</strong>
-              <div>
-                <Input
-                  className="UnformInput"
-                  type="text"
-                  name="dtini"
-                  placeholder="Escolha a data"
-                />
-              </div>
+              <ReactDate name="dtini" handleInputChange={e => setDate(e)} />
             </div>
             <div className="divs">
               <strong>DATA DE TÉRMINO</strong>
-              <input type="text" className="locked" disabled value={0} />
+              <input
+                type="text"
+                className="locked"
+                disabled
+                value={dtTermino}
+              />
             </div>
             <div className="divs">
               <strong>VALOR FINAL</strong>
-              <input type="text" className="locked" disabled value={0} />
+              <input type="text" className="locked" disabled value={finValue} />
             </div>
           </BottomFields>
         </Fields>
