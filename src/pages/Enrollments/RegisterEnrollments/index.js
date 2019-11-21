@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { addMonths, format, parseISO } from 'date-fns';
+import { toast } from 'react-toastify';
 import history from '../../../services/history';
 import api from '../../../services/api';
 import SaveAndBackButtons from '../../../components/Controls/SaveAndBackButtons';
@@ -139,8 +140,32 @@ export default function RegisterEnrollments() {
     const inputValue = newValue.replace(/\W/g, '');
     return inputValue;
   }
-  function handleSubmit(data) {
-    console.tron.log(data);
+  async function handleSubmit({ plano, alunoselect, dtini }) {
+    // Verifica se é para criar um registro novo ou
+    // se é para atualizar
+
+    try {
+      if (!id) {
+        await api.post(`/enrollments/${plano}`, {
+          student_id: alunoselect,
+          start_date: dtini,
+        });
+      } else {
+        await api.put(`/enrollments/${id}`, {
+          plan_id: plano,
+          student_id: alunoselect,
+          start_date: dtini,
+        });
+      }
+      toast.success('Cadastro realizado com sucesso');
+      history.push('/enrollments/manageenrollments');
+    } catch (err) {
+      if (err.response.data.error) {
+        toast.error(`Erro no cadastro: ${err.response.data.error}`);
+      } else {
+        toast.error('Erro no cadastro');
+      }
+    }
   }
   return (
     <>

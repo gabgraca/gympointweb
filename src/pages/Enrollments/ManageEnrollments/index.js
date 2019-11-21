@@ -7,9 +7,12 @@ import RegisterButton from '../../../components/Controls/RegisterButton';
 import { Container, Top, List } from './styles';
 import history from '../../../services/history';
 import api from '../../../services/api';
+import Popup from '../../../components/Popup';
 
 export default function ManageEnrollments() {
   const [enrollments, setEnrollments] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [enrollmentIdToDel, setEnrollmentIdToDel] = useState('');
   function handleButtonClick() {
     history.push('/enrollments/newenrollment');
   }
@@ -40,6 +43,22 @@ export default function ManageEnrollments() {
   useEffect(() => {
     loadEnrollments();
   }, []);
+
+  async function handleYes() {
+    await api.delete(`/enrollments/${enrollmentIdToDel}`);
+
+    loadEnrollments();
+    setShowPopup(false);
+  }
+
+  function handleNo() {
+    setShowPopup(false);
+  }
+
+  function showPopupToDel(enrollmentId) {
+    setEnrollmentIdToDel(enrollmentId);
+    setShowPopup(true);
+  }
 
   return (
     <>
@@ -80,7 +99,7 @@ export default function ManageEnrollments() {
                 <td>
                   <button
                     type="button"
-                    onClick={() => console.tron.log('Apagar')}
+                    onClick={() => showPopupToDel(enrollment.id)}
                   >
                     Apagar
                   </button>
@@ -90,6 +109,13 @@ export default function ManageEnrollments() {
           </tbody>
         </List>
       </Container>
+      {showPopup ? (
+        <Popup
+          title="Deseja mesmo excluir o registro?"
+          handleYes={handleYes}
+          handleNo={handleNo}
+        />
+      ) : null}
     </>
   );
 }
